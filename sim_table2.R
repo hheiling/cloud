@@ -88,7 +88,7 @@ library(stringr)
 M_label = rep(str_c("M:", M_str), each = length(const))
 colnames(output) = str_c("c:", const, ",", M_label)
 
-# save(output, file = "sim_table2_output.RData")
+save(output, file = "sim_table2_output.RData")
 
 # save(output)
 
