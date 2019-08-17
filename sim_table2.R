@@ -11,6 +11,7 @@ sd_l = length(sd_options)
 
 data_sim_Tab2 = list()
 
+library(glmmPen)
 
 for(stddev in 1:length(sd_options)){
   for(s in seeds){
@@ -43,9 +44,9 @@ fit_sim = function(dat, const, M){
       if(c == 1 && m == 1) next
       
       # Log-likelihood
-      ll_glmmPen[c,m] = logLik_imp(dat$y, dat$X, dat$Z, U = fit_glmmPen$u, 
+      ll_glmmPen[c,m] = logLik_imp(y = dat$y, X = dat$X, Z = dat$Z, U = fit_glmmPen$u, 
                                    sigma = fit_glmmPen$sigma, 
-                                   dat$group, fit_glmmPen$coef, fit_glmmPen$J, family = "binomial", 
+                                   group = dat$group, coef = fit_glmmPen$coef, family = "binomial", 
                                    df = 10, c, m)
       
     }
