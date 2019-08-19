@@ -71,44 +71,44 @@ data_sim_Tab4 = list()
 
 for(stddev in 1:length(sd_options)){
   for(s in seeds){
-    dat =
+    data_init =
       sim.data2(n = N, ptot = 10, pnonzero = 2, nstudies = K,
                 sd_raneff = sd_options[stddev], family = 'binomial',
                 slopes = T,
                 seed = s, imbalance = 1, pnonzerovar = 0, beta = c(0, 1, 1))
-    data_sim_Tab4[[s+(stddev-1)*s_l]] = c(dat, seed = s)
+    data_sim_Tab4[[s+(stddev-1)*s_l]] = c(data_init, seed = s)
   }
 }
 
 
 select_sim = function(dat, const = 1, M = 10^5, nlambda = 40){
   # Calculate lambda0 and lambda1 ranges
-  range_fixed = LambdaRange(dat$X[,-1], dat$y, family = "binomial", nlambda)
+  range_fixed = LambdaRange(dat$X[,-1], dat$y, family = "binomial", nlambda = nlambda)
   range_random = range_fixed
   
   opt_res = matrix(0, nrow = 2, ncol = 9)
   opt_fef = matrix(0, nrow = 2, ncol = ncol(dat$X))
-  
+
   set.seed(dat$seed)
   out_fit = select_tune(dat, nMC = 100, lambda0_range = range_fixed,
-                        lambda1_range = range_random, family = "binomial", 
+                        lambda1_range = range_random, family = "binomial",
                         penalty = "grMCP", returnMC = T,
-                        conv = 0.001, nMC_max = 3000, trace = 0, ufull = NULL, coeffull = NULL, 
+                        conv = 0.001, nMC_max = 3000, trace = 0, ufull = NULL, coeffull = NULL,
                         gibbs = T, maxitEM = 50, alpha = 1,
                         c = const, M = M)
-  
-  
+
+
   opt_res[1,] = out_fit$result[which.min(out_fit$result[,9]),]
   opt_res[2,] = out_fit$result[which.min(out_fit$result[,3]),]
-  
+
   opt_fef[1,] = out_fit$coef[which.min(out_fit$result[,9]),1:ncol(dat$X)]
   opt_fef[2,] = out_fit$coef[which.min(out_fit$result[,3]),1:ncol(dat$X)]
-  
+
   rownames(opt_res) = c("BIC","BICh")
   rownames(opt_fef) = rownames(opt_res)
-  
+
   return(list(opt_res = opt_res, opt_fef = opt_fef))
-  
+
 }
 
 library(parallel)
