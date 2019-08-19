@@ -52,7 +52,7 @@ LambdaRange = function(X, y, family, alpha = 1, lambda.min = NULL, nlambda = 40,
     penalty.factor = rep(1, p)
   }
   
-  lambda = setupLambda_pglmm(x, yy, family, alpha, lambda.min, nlambda, penalty.factor)
+  lambda = setupLambda_pglmm(X, yy, family, alpha, lambda.min, nlambda, penalty.factor)
   
   return(lambda)
   
