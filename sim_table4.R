@@ -81,7 +81,7 @@ for(stddev in 1:length(sd_options)){
 }
 
 
-select_sim = function(dat, const = 1, M = 10^5, nlambda = 40){
+select_sim = function(dat, const = 1, M = 10^5, nlambda = 20){
   # Calculate lambda0 and lambda1 ranges
   range_fixed = LambdaRange(dat$X[,-1], dat$y, family = "binomial", nlambda = nlambda)
   range_random = range_fixed
