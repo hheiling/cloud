@@ -7,10 +7,15 @@ library(foreach)
 library(doParallel)
 library(stringr)
 
+# N = 500
+# K = 5
+# seeds = 1:100
+# sd_options = c(0.5, 1.0, 2.0)
+
 N = 500
 K = 5
 seeds = 1:100
-sd_options = c(0.5, 1.0, 2.0)
+sd_options = c(0.5, 1.0)
 
 M = c(10^4,10^5,3*10^5)
 M_str = c("10^4","10^5","3*10^5")
@@ -78,7 +83,8 @@ fit_sim = function(dat, M){
 }
 
 
-numCores = detectCores()
+# numCores = detectCores()
+numCores = 4
 registerDoParallel(numCores)
 output = 
   foreach(i = 1:length(data_sim_Tab2), .combine = rbind) %dopar% {
@@ -89,9 +95,12 @@ output =
 M_label = str_c("M_", M_str)
 colnames(output) = M_label
 
+# row_labels = c(rep(str_c("sd_", sd_options[1]), times = s_l),
+#                rep(str_c("sd_", sd_options[2]), times = s_l),
+#                rep(str_c("sd_", sd_options[3]), times = s_l))
+
 row_labels = c(rep(str_c("sd_", sd_options[1]), times = s_l),
-               rep(str_c("sd_", sd_options[2]), times = s_l),
-               rep(str_c("sd_", sd_options[3]), times = s_l))
+               rep(str_c("sd_", sd_options[2]), times = s_l))
 rownames(output) = row_labels
 
 save(output, file = "sim_table2_Pajor_output.RData")
