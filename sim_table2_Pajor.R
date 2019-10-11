@@ -84,10 +84,16 @@ fit_sim = function(dat, M){
 
 
 # numCores = detectCores()
-numCores = 4
-registerDoParallel(numCores)
-output = 
-  foreach(i = 1:length(data_sim_Tab2), .combine = rbind) %dopar% {
+# numCores = 4
+# registerDoParallel(numCores)
+# output = 
+#   foreach(i = 1:length(data_sim_Tab2), .combine = rbind) %dopar% {
+#     library(glmmPen)
+#     fit_sim(data_sim_Tab2[[i]], M = M)
+#   }
+
+output =
+  foreach(i = 1:length(data_sim_Tab2), .combine = rbind) %do% {
     library(glmmPen)
     fit_sim(data_sim_Tab2[[i]], M = M)
   }
