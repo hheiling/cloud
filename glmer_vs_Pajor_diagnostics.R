@@ -102,20 +102,20 @@ fit_sim = function(dat, M){
 }
 
 # In parallel:
-numCores = 4
-registerDoParallel(numCores)
-output =
-  foreach(i = 1:length(data_diagnostics)) %dopar% {
-    library(glmmPen)
-    fit_sim(data_diagnostics[[i]], M = M)
-  }
-
-# In serial:
+# numCores = 4
+# registerDoParallel(numCores)
 # output =
-#   foreach(i = 1:length(data_diagnostics)) %do% {
+#   foreach(i = 1:length(data_diagnostics)) %dopar% {
 #     library(glmmPen)
 #     fit_sim(data_diagnostics[[i]], M = M)
 #   }
+
+# In serial:
+output =
+  foreach(i = 1:length(data_diagnostics)) %do% {
+    library(glmmPen)
+    fit_sim(data_diagnostics[[i]], M = M)
+  }
 
 save(output, file = "glmer_Pajor_diagnostics.RData")
 
