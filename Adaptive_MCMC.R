@@ -4,7 +4,7 @@ library(devtools)
 library(remotes)
 install_github("hheiling/glmmPen", force = TRUE)
 
-## Testing Adaptive Metropolis-within-Gibbs functions
+## Needed libraries
 library(glmmPen)
 library(stringr)
 library(ggplot2)
@@ -34,6 +34,7 @@ q = 3
 # test_fit = fit_dat_out(output_1[[1]]$dat)
 # save(test_fit, file = "test_fit.RData")
 
+## Testing Adaptive Metropolis-within-Gibbs functions
 AMCMC_test = function(fit_glmmPen, dat){
   
   # Set variables
@@ -57,7 +58,7 @@ AMCMC_test = function(fit_glmmPen, dat){
 }
 
 ## Examine performance of Adaptive Metropolis-within-Gibbs
-load("test_fit.RData")
+load("test_fit.RData") # gives test_fit object
 test_obj1 = AMCMC_test(fit_glmmPen = test_fit, dat = output_1[[1]]$dat)
 
 ## Evaluate the performance of the chain
