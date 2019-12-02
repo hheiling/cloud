@@ -14,6 +14,8 @@
 ## by the fit_dat function, the sample.mc3 object (adaptive Metropolis-within-Gibbs object),
 ## and autocorrelation and sample.path plots from this sample.mc3 object
 
+# glmmmPen version 1.4.3, before changing proposal_var name to proposal_SD name
+
 library(glmmPen)
 
 library(glmmPen)
@@ -297,63 +299,3 @@ save(test_results_abbrev, file = "adaptive_vs_set_mcmc_abbrev.RData")
 # 
 # save(test_results_abbrev2, file = "adaptive_vs_set_mcmc_abbrev2.RData")
 
-# Re-do test using updates to code as of 11/18 
-
-fit_sim2 = function(output, M = 2*10^4){
-  
-  K = 5
-  q = 3
-  
-  dat = output$dat
-  fit_glmmPen = output$fit_glmmPen
-  
-  original = sample.mc2(fit = fit_glmmPen$fit, cov = fit_glmmPen$sigma, y = dat$y, X = dat$X,
-                        Z = fit_glmmPen$extra$Znew2, nMC = M, family = "binomial", 
-                        group = dat$group, d = nlevels(dat$group), okindex = fit_glmmPen$extra$ok_index,
-                        nZ = fit_glmmPen$extra$Znew2, gibbs = T, uold = fit_glmmPen$u, trace = 2)
-  
-  post_U_original = original$u0
-  accept_rate_original = original$gibbs_accept_rate
-  # original_plots = mcmc_diagnostics(post_U_original)
-  
-  original_list = list(post_U = post_U_original, gibbs_accept_rate = accept_rate_original)
-  
-  acc_rate_vec = c(accept_rate_original)
-  proposal_var_vec = numeric(length(acc_rate_vec))
-  for(i in 1:length(proposal_var_vec)){
-    if(acc_rate_vec[i] < 0.35){
-      proposal_var_vec[i] = 1.5
-    }else if(acc_rate_vec[i] > 0.55){
-      proposal_var_vec[i] = 1/1.5
-    }else{
-      proposal_var_vec[i] = 1.0
-    }
-  }
-  
-  proposal_var_manual = matrix(proposal_var_vec, nrow = K, ncol = q, byrow = F)
-  
-  # Output: post_U, gibbs_accept_rate, proposal_var
-  manual = manual_MCMC_test(fit_glmmPen, dat, proposal_var_manual, M)
-  # manual_plots = mcmc_diagnostics(manual$post_U)
-  
-  # Ouput: post_U, gibbs_accept_rate, proposal_var
-  adaptive = AMCMC_test(fit_glmmPen, dat, M)
-  # adaptive_plots = mcmc_diagnostics(adaptive$post_U)
-  
-  # plots = list(original = original_plots, manual = manual_plots,
-  #              adaptive = adaptive_plots)
-  
-  # keep = list(dat = dat, fit_glmmPen = fit_glmmPen, original = original_list, 
-  #             manual = manual, adaptive = adaptive, plots = plots)
-  keep = list(dat = dat, fit_glmmPen = fit_glmmPen, original = original_list, 
-              manual = manual, adaptive = adaptive)
-  
-  return(keep)
-}
-
-test_results_2 = list()
-for(i in 1:7){
-  test_results_2[[i]] = fit_sim2(test_results_noplots[[i]], M = 2*10^4)
-}
-
-save(test_results_2, file = "adaptive_mcmc_test2.RData")
