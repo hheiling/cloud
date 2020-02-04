@@ -106,7 +106,7 @@ output = list()
 #   output[[i]] = fit_sim(dat = data_sim[[i]], M = M)
 # }
 
-for(i in 1){
+for(i in 1:length(data_sim)){
   cat("Start dataset ", i, "\n")
   output[[i]] = fit_sim(dat = data_sim[[i]], M = M)
 }
